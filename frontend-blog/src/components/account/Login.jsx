@@ -21,6 +21,10 @@ const Login = () => {
     const onInputChange = (e) => {
         setSignup({...signup, [e.target.name]: e.target.value})
         // console.log(e.target.name,e.target.value);
+    };
+
+    const signupUser = () => {
+        
     }
 
     return (
@@ -45,7 +49,7 @@ const Login = () => {
                             <TextField variant='standard' onChange={(e) => onInputChange(e)} name='name' label='Enter Name'/>
                             <TextField variant='standard' onChange={(e) => onInputChange(e)} name='username' label='Enter Username'/>
                             <TextField variant='standard' onChange={(e) => onInputChange(e)} name='password' label='Enter Password'/>
-                            <Button variant="contained" className='signup-button'>SignUp</Button>
+                            <Button onClick={()=> signupUser()} variant="contained" className='signup-button'>SignUp</Button>
                             <Typography className='typo'>OR</Typography>
                             <Button variant='contained' className='login-button'
                                 onClick={() => setLoginAccount()}
