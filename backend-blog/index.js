@@ -1,13 +1,18 @@
 import express from 'express';
 import Connection from './database/db.js';
 import dotenv from 'dotenv';
-import Router from './routes/routes.js';
+import router from './routes/routes.js';
+import CORS from 'cors';
+import bodyParser from 'body-parser';
 
 dotenv.config();
 
 const app = express();
 
-app.use('/', Router);
+app.use(CORS());
+app.use(bodyParser.json({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use('/', router);
 
 const PORT = 8000;
 

@@ -29,6 +29,14 @@
     color: #878787;
 }
 
+.error-typo{
+    font-size: 10px;
+    color: #ff6161;
+    line-height: 0;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
 .login-button {
     text-transform: none !important;
     background-color: #FB641B !important;
