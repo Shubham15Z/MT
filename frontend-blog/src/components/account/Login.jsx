@@ -1,8 +1,15 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import '../styles/login.css';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { IMG_URL } from '../../constants/constant';
 import { API } from '../../service/api';
+import { DataContext } from '../../context/DataProvider';
+import { useNavigate } from 'react-router-dom';
+
+const loginInitialValues = {
+    username: '',
+    password: ''
+};
 
 const signupInitialValues = {
     name: '',
@@ -10,14 +17,18 @@ const signupInitialValues = {
     password: ''
 };
 
-const Login = () => {
+const Login = ({isUserAuthenticated}) => {
 
-    const [account, setAccount] = useState('login');
+    const [account, toggleAccount] = useState('login');
     const [signup, setSignup] = useState(signupInitialValues);
+    const [login, setLogin] = useState(loginInitialValues);
     const [error, setError] = useState('');
 
-    const setLoginAccount = () => {
-        account === 'signup' ? setAccount('login') : setAccount('signup');
+    const { setAccount } = useContext(DataContext);
+    const navigate = useNavigate();
+
+    const toggleSignup = () => {
+        account === 'signup' ? toggleAccount('login') : toggleAccount('signup');
     };
 
     const onInputChange = (e) => {
@@ -30,11 +41,33 @@ const Login = () => {
        if(response.isSuccess) {
         setError('');
         setSignup(signupInitialValues);
-        setLoginAccount('login')
+        toggleAccount('login')
        } else {
             setError('Something went wrong! please try again later')
        }
     }
+
+    const onValueChange = (e) => {
+        setLogin({...login, [e.target.name]: e.target.value});
+    };
+
+    const loginUser = async () => {
+        let response = await API.userLogin(login);
+        if(response.isSuccess) {
+            setError('');
+
+            sessionStorage.setItem('accessToken', `Bearer ${response.data.accessToken}`);
+            sessionStorage.setItem('refreshToken', `Bearer ${response.data.refreshToken}`);
+            
+            setAccount({username: response.data.username, name: response.data.name});
+
+            isUserAuthenticated(true);
+
+            navigate('/');
+        } else {
+            setError('Something went wrong please try again later');
+        }
+    };
 
     return (
         <Box className="component">
@@ -43,14 +76,14 @@ const Login = () => {
                 {
                     account === 'login' ?
                         <Box className='wrapper'>
-                            <TextField variant='standard' label='Username'/>
-                            <TextField variant='standard' label='Password'/>
+                            <TextField variant='standard' value = {login.username} onChange={(e) => onValueChange(e)} name='username' label='Username'/>
+                            <TextField variant='standard' value = {login.password} onChange={(e) => onValueChange(e)} name='password' label='Password'/>
 
                             { error && <Typography className='error-typo'>{error}</Typography>}
-                            <Button variant="contained" className='login-button'>Login</Button>
+                            <Button variant="contained" onClick={() => loginUser()} className='login-button'>Login</Button>
                             <Typography className='typo'>OR</Typography>
                             <Button variant='contained' className='signup-button'
-                                onClick={() => setLoginAccount()}
+                                onClick={() => toggleSignup()}
                             >
                                 Create an Account?
                             </Button>
@@ -65,7 +98,7 @@ const Login = () => {
                             <Button onClick={()=> signupUser()} variant="contained" className='signup-button'>SignUp</Button>
                             <Typography className='typo'>OR</Typography>
                             <Button variant='contained' className='login-button'
-                                onClick={() => setLoginAccount()}
+                                onClick={() => toggleSignup()}
                             >
                                 Already have an Account?
                             </Button>
