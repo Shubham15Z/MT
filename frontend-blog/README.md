@@ -70,3 +70,12 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 # MT
 Blogging Platform a FullStack Web Application (MERN)
+
+# MiddleWare
+-used multer-gridfs-storage library as middleware
+-install it using npm
+-used to upload file directly into mongodb
+
+# covert chunk image to original image
+npm install gridfs-stream
+npm i gridfs-stream --legacy-peer-deps
